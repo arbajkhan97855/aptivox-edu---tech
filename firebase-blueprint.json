@@ -1,0 +1,336 @@
+{
+  "entities": {
+    "Settings": {
+      "title": "Institute Settings",
+      "description": "Global examination & branding configuration for APTIVOX EDUCATION & TECHNOLOGY.",
+      "type": "object",
+      "properties": {
+        "institute_name": { "type": "string", "minLength": 2, "maxLength": 200 },
+        "tagline": { "type": "string", "minLength": 2, "maxLength": 200 },
+        "address": { "type": "string", "maxLength": 300 },
+        "contact": { "type": "string", "minLength": 5, "maxLength": 30 },
+        "email": { "type": "string", "format": "email", "maxLength": 150 },
+        "passing_percentage": { "type": "number" },
+        "default_exam_duration": { "type": "number" },
+        "camera_required": { "type": "boolean" },
+        "fullscreen_required": { "type": "boolean" },
+        "re_exam_policy": { "type": "string", "maxLength": 80 },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["institute_name", "tagline", "contact", "email", "passing_percentage", "default_exam_duration", "camera_required", "fullscreen_required", "re_exam_policy"]
+    },
+    "AdminUser": {
+      "title": "Admin User",
+      "description": "Authorized institute administrator account.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "name": { "type": "string", "minLength": 2, "maxLength": 150 },
+        "email": { "type": "string", "format": "email", "maxLength": 150 },
+        "role": { "type": "string", "enum": ["ADMIN", "SUPER_ADMIN"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "name", "email", "role", "createdAt"]
+    },
+    "Course": {
+      "title": "Course",
+      "description": "Academic program or certification track offered by the institute.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 64 },
+        "name": { "type": "string", "minLength": 2, "maxLength": 150 },
+        "duration": { "type": "string", "maxLength": 60 },
+        "status": { "type": "string", "enum": ["ACTIVE", "INACTIVE"] },
+        "description": { "type": "string", "maxLength": 2000 },
+        "course_image": { "type": "string", "maxLength": 500000 },
+        "subjects": { "type": "array" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "duration", "status", "description"]
+    },
+    "Subject": {
+      "title": "Subject",
+      "description": "Curriculum subject module belonging to one or more courses.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 64 },
+        "course_id": { "type": "string", "maxLength": 64 },
+        "category": { "type": "string", "maxLength": 100 },
+        "name": { "type": "string", "minLength": 2, "maxLength": 150 },
+        "description": { "type": "string", "maxLength": 2000 },
+        "image": { "type": "string", "maxLength": 500000 },
+        "status": { "type": "string", "enum": ["ACTIVE", "INACTIVE"] }
+      },
+      "required": ["id", "name", "status"]
+    },
+    "Topic": {
+      "title": "Topic",
+      "description": "Curriculum topic belonging to a subject.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 64 },
+        "subject_id": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 64 },
+        "name": { "type": "string", "minLength": 2, "maxLength": 150 },
+        "description": { "type": "string", "maxLength": 2000 },
+        "status": { "type": "string", "enum": ["ACTIVE", "INACTIVE"] }
+      },
+      "required": ["id", "subject_id", "name"]
+    },
+    "TestLevel": {
+      "title": "Test Level",
+      "description": "Difficulty classification for exam papers.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 64 },
+        "name": { "type": "string", "minLength": 2, "maxLength": 80 }
+      },
+      "required": ["id", "name"]
+    },
+    "ExamPaper": {
+      "title": "Exam Paper",
+      "description": "Proctored online examination paper configuration.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 64 },
+        "course_id": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 64 },
+        "course_ids": { "type": "array" },
+        "subject_id": { "type": "string", "maxLength": 64 },
+        "topic_id": { "type": "string", "maxLength": 64 },
+        "level_id": { "type": "string", "maxLength": 64 },
+        "paper_number": { "type": "number" },
+        "title": { "type": "string", "minLength": 2, "maxLength": 250 },
+        "duration_minutes": { "type": "number" },
+        "total_questions": { "type": "number" },
+        "total_marks": { "type": "number" },
+        "passing_marks": { "type": "number" },
+        "negative_marking": { "type": "number" },
+        "randomize": { "type": "boolean" },
+        "status": { "type": "string", "enum": ["PUBLISHED", "DRAFT", "ARCHIVED"] }
+      },
+      "required": ["id", "title", "duration_minutes", "total_marks", "passing_marks", "status"]
+    },
+    "Question": {
+      "title": "Question",
+      "description": "Multiple-choice examination question linked to an exam paper.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 64 },
+        "paper_id": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 64 },
+        "course_id": { "type": "string", "maxLength": 64 },
+        "subject_id": { "type": "string", "maxLength": 64 },
+        "topic_id": { "type": "string", "maxLength": 64 },
+        "level_id": { "type": "string", "maxLength": 64 },
+        "question_text": { "type": "string", "minLength": 2, "maxLength": 2000 },
+        "question_image": { "type": "string", "maxLength": 500000 },
+        "option_a": { "type": "string", "minLength": 1, "maxLength": 800 },
+        "option_b": { "type": "string", "minLength": 1, "maxLength": 800 },
+        "option_c": { "type": "string", "minLength": 1, "maxLength": 800 },
+        "option_d": { "type": "string", "minLength": 1, "maxLength": 800 },
+        "correct_answer": { "type": "string", "enum": ["A", "B", "C", "D"] },
+        "marks": { "type": "number" },
+        "negative_marks": { "type": "number" },
+        "negative_marking": { "type": "number" },
+        "explanation": { "type": "string", "maxLength": 2000 },
+        "difficulty": { "type": "string", "enum": ["EASY", "MEDIUM", "HARD"] }
+      },
+      "required": ["id", "paper_id", "question_text", "option_a", "option_b", "option_c", "option_d", "correct_answer", "marks"]
+    },
+    "Student": {
+      "title": "Student Profile",
+      "description": "Enrolled student profile containing PII restricted to owner and admins.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "uid": { "type": "string", "maxLength": 128 },
+        "student_id": { "type": "string", "minLength": 3, "maxLength": 60 },
+        "name": { "type": "string", "minLength": 2, "maxLength": 150 },
+        "father_name": { "type": "string", "maxLength": 150 },
+        "email": { "type": "string", "format": "email", "maxLength": 150 },
+        "mobile": { "type": "string", "maxLength": 30 },
+        "dob": { "type": "string", "maxLength": 30 },
+        "address": { "type": "string", "maxLength": 300 },
+        "course_id": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 64 },
+        "enrolled_subjects": { "type": "array" },
+        "batch": { "type": "string", "maxLength": 120 },
+        "enrollment_date": { "type": "string", "maxLength": 30 },
+        "status": { "type": "string", "enum": ["ACTIVE", "DEACTIVATED"] },
+        "profile_image": { "type": "string", "maxLength": 500000 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "uid", "student_id", "name", "email", "course_id", "status", "createdAt"]
+    },
+    "ExamAttempt": {
+      "title": "Exam Attempt",
+      "description": "Single student attempt on an exam paper with proctoring & scoring fields.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "student_id": { "type": "string", "maxLength": 128 },
+        "student_uid": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "exam_id": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 64 },
+        "status": { "type": "string", "enum": ["IN_PROGRESS", "COMPLETED", "SUBMITTED", "RE_EXAM_REQUIRED", "VIOLATED"] },
+        "started_at": { "type": "string", "maxLength": 60 },
+        "submitted_at": { "type": "string", "maxLength": 60 },
+        "time_taken_seconds": { "type": "number" },
+        "score": { "type": "number" },
+        "total_marks": { "type": "number" },
+        "percentage": { "type": "number" },
+        "passed": { "type": "boolean" },
+        "correct_count": { "type": "number" },
+        "wrong_count": { "type": "number" },
+        "unanswered_count": { "type": "number" },
+        "violation_count": { "type": "number" },
+        "camera_status": { "type": "string", "maxLength": 40 },
+        "re_exam_required": { "type": "boolean" },
+        "captured_photo": { "type": "string", "maxLength": 500000 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "student_id", "student_uid", "exam_id", "status", "started_at", "violation_count", "re_exam_required", "createdAt"]
+    },
+    "ExamAnswer": {
+      "title": "Exam Answer",
+      "description": "Student selected option for a specific question within an active attempt.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 160 },
+        "attempt_id": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "student_uid": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "exam_id": { "type": "string", "maxLength": 64 },
+        "question_id": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "selected_option": { "type": "string", "enum": ["A", "B", "C", "D", ""] },
+        "is_marked_for_review": { "type": "boolean" },
+        "answered_at": { "type": "string", "maxLength": 60 }
+      },
+      "required": ["id", "attempt_id", "student_uid", "question_id", "selected_option"]
+    },
+    "ExamViolation": {
+      "title": "Exam Violation",
+      "description": "Proctoring integrity event logged during an exam attempt.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "attempt_id": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "student_id": { "type": "string", "maxLength": 128 },
+        "student_uid": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "exam_id": { "type": "string", "maxLength": 64 },
+        "violation_type": { "type": "string", "maxLength": 100 },
+        "details": { "type": "string", "maxLength": 500 },
+        "timestamp": { "type": "string", "maxLength": 60 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "attempt_id", "student_uid", "exam_id", "violation_type", "createdAt"]
+    },
+    "Note": {
+      "title": "Study Note",
+      "description": "Course study material / PDF note resource.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 64 },
+        "course_id": { "type": "string", "maxLength": 64 },
+        "subject_id": { "type": "string", "maxLength": 64 },
+        "topic_id": { "type": "string", "maxLength": 64 },
+        "title": { "type": "string", "minLength": 2, "maxLength": 250 },
+        "description": { "type": "string", "maxLength": 2000 },
+        "pdf_url": { "type": "string", "maxLength": 900000 },
+        "cover_image": { "type": "string", "maxLength": 500000 },
+        "status": { "type": "string", "enum": ["ACTIVE", "INACTIVE"] },
+        "download_count": { "type": "number" },
+        "uploaded_at": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["id", "title", "pdf_url", "status", "download_count"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "Alert notification for Admin or specific Student.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "recipient_type": { "type": "string", "enum": ["ADMIN", "STUDENT"] },
+        "student_id": { "type": "string", "maxLength": 128 },
+        "student_uid": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "minLength": 2, "maxLength": 200 },
+        "message": { "type": "string", "minLength": 2, "maxLength": 1000 },
+        "read": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "recipient_type", "title", "message", "read", "createdAt"]
+    },
+    "StudentLoginAlias": {
+      "title": "Student Login Alias",
+      "description": "Zero-PII lookup mapping uppercase Student ID to Firebase Auth login alias email.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "student_doc_id": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "auth_alias_email": { "type": "string", "format": "email", "minLength": 5, "maxLength": 160 },
+        "auth_uid": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "student_doc_id", "auth_alias_email", "auth_uid"]
+    }
+  },
+  "firestore": {
+    "/settings/{settingId}": {
+      "schema": { "$ref": "#/entities/Settings" },
+      "description": "Global institute configuration document (e.g., /settings/institute)."
+    },
+    "/admins/{adminUid}": {
+      "schema": { "$ref": "#/entities/AdminUser" },
+      "description": "Registered administrator accounts keyed by Firebase UID."
+    },
+    "/courses/{courseId}": {
+      "schema": { "$ref": "#/entities/Course" },
+      "description": "Courses catalog."
+    },
+    "/subjects/{subjectId}": {
+      "schema": { "$ref": "#/entities/Subject" },
+      "description": "Subjects under courses."
+    },
+    "/topics/{topicId}": {
+      "schema": { "$ref": "#/entities/Topic" },
+      "description": "Topics under subjects."
+    },
+    "/test_levels/{levelId}": {
+      "schema": { "$ref": "#/entities/TestLevel" },
+      "description": "Test difficulty levels."
+    },
+    "/exam_papers/{paperId}": {
+      "schema": { "$ref": "#/entities/ExamPaper" },
+      "description": "Examination paper definitions."
+    },
+    "/questions/{questionId}": {
+      "schema": { "$ref": "#/entities/Question" },
+      "description": "Question bank items linked to exam papers."
+    },
+    "/students/{studentDocId}": {
+      "schema": { "$ref": "#/entities/Student" },
+      "description": "Student profiles with strict owner/admin PII protection."
+    },
+    "/exam_attempts/{attemptId}": {
+      "schema": { "$ref": "#/entities/ExamAttempt" },
+      "description": "Student exam attempts with terminal state locking."
+    },
+    "/exam_answers/{answerId}": {
+      "schema": { "$ref": "#/entities/ExamAnswer" },
+      "description": "Student answers gated by active parent attempt."
+    },
+    "/exam_violations/{violationId}": {
+      "schema": { "$ref": "#/entities/ExamViolation" },
+      "description": "Proctoring violation logs."
+    },
+    "/notes/{noteId}": {
+      "schema": { "$ref": "#/entities/Note" },
+      "description": "Study notes repository."
+    },
+    "/notifications/{notifId}": {
+      "schema": { "$ref": "#/entities/Notification" },
+      "description": "Admin and student notifications."
+    },
+    "/student_login_aliases/{studentCode}": {
+      "schema": { "$ref": "#/entities/StudentLoginAlias" },
+      "description": "Zero-PII lookup mapping Student ID to Firebase Auth login alias email."
+    }
+  }
+}

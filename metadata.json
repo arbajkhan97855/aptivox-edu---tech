@@ -1,0 +1,10 @@
+{
+  "name": "APTIVOX EDUCATION & TECHNOLOGY - Examination & Student Portal",
+  "description": "Production-grade Online Examination and Student Management System for APTIVOX EDUCATION & TECHNOLOGY. Learn Today. Achieve Tomorrow. Featuring proctored exams, camera verification, violation monitoring, notes repository, and comprehensive administration.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
